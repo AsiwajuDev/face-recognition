@@ -7,6 +7,7 @@ import Logo from "./components/Logo/Logo";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
+import SignIn from "./components/Navigation/NavBar/SignIn";
 
 import "./App.css";
 
@@ -28,6 +29,7 @@ class App extends Component {
       input: " ",
       imageUrl: "",
       box: {},
+      route: "signIn",
     };
   }
 
@@ -66,18 +68,31 @@ class App extends Component {
       .catch((error) => console.log(error));
   };
 
+  onRouteChange = () => {
+    this.setState({ route: "home" });
+  };
+
   render() {
     return (
       <div className="App">
         <Particles className="particles" params={particleVariables} />
         <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm
-          onInputChange={this.onInputChange}
-          onButtonSubmit={this.onButtonSubmit}
-        />
-        <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
+        {this.state.route === "signIn" ? (
+          <SignIn onRouteChange={this.onRouteChange} />
+        ) : (
+          <div>
+            <Logo />
+            <Rank />
+            <ImageLinkForm
+              onInputChange={this.onInputChange}
+              onButtonSubmit={this.onButtonSubmit}
+            />
+            <FaceRecognition
+              box={this.state.box}
+              imageUrl={this.state.imageUrl}
+            />
+          </div>
+        )}
       </div>
     );
   }
