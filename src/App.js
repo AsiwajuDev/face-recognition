@@ -8,9 +8,11 @@ import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import SignIn from "./components/Navigation/NavBar/SignIn";
+import Register from "./components/Navigation/NavBar/Register";
 
 import "./App.css";
 
+//React-Particle-js properties
 const particleVariables = {
   particles: {
     number: {
@@ -20,6 +22,7 @@ const particleVariables = {
   },
 };
 
+//Initialize Clarifai app used for Face-Detection API
 const app = new Clarifai.App({ apiKey: "17dab57c049e4b10b15108bbaff9a9f4" });
 
 class App extends Component {
@@ -33,6 +36,7 @@ class App extends Component {
     };
   }
 
+  //Function calculates the face detected in an image and render borders to the face
   calculateFaceLocation = (data) => {
     const clarifaiFace =
       data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -48,15 +52,18 @@ class App extends Component {
     };
   };
 
+  //Displays the borders to the face on the image
   displayFaceBox = (box) => {
     console.log(box);
     this.setState({ box: box });
   };
 
+  //Collects input of the url entered
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
   };
 
+  //Calls the API to display image and collect data from Clarifai API
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
 
@@ -68,18 +75,17 @@ class App extends Component {
       .catch((error) => console.log(error));
   };
 
-  onRouteChange = () => {
-    this.setState({ route: "home" });
+  //Function for changing routes
+  onRouteChange = (route) => {
+    this.setState({ route: route });
   };
 
   render() {
     return (
       <div className="App">
         <Particles className="particles" params={particleVariables} />
-        <Navigation />
-        {this.state.route === "signIn" ? (
-          <SignIn onRouteChange={this.onRouteChange} />
-        ) : (
+        <Navigation onRouteChange={this.onRouteChange} />
+        {this.state.route === "home" ? (
           <div>
             <Logo />
             <Rank />
@@ -92,6 +98,10 @@ class App extends Component {
               imageUrl={this.state.imageUrl}
             />
           </div>
+        ) : this.state.route === "signIn" ? (
+          <SignIn onRouteChange={this.onRouteChange} />
+        ) : (
+          <Register onRouteChange={this.onRouteChange} />
         )}
       </div>
     );
